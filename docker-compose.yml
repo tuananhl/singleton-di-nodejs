@@ -1,0 +1,26 @@
+version: '2'
+services:
+    redis:
+        image: redis
+        ports:
+            - "63792:6379"
+    mysql:
+        image: mysql:5.7.27
+        ports:
+            - "33065:3306"
+        environment:
+            - MYSQL_DATABASE=shop160_db
+            - MYSQL_ROOT_PASSWORD=root
+    security:
+        build: ./source
+        links:
+            - redis
+        ports:
+            - "5001:3500"
+        depends_on:
+            - mysql
+        environment:
+            - DATABASE_HOST=db
+            - redis_server_addr=redis
+        volumes:
+            - ./source:/app
